@@ -1,3 +1,6 @@
+/**
+ * 封装了网络请求
+ */
 import { extend } from 'umi-request';
 import { notification } from 'antd';
 

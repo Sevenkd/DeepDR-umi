@@ -7,6 +7,9 @@ import CheckPermissions from './CheckPermissions';
  */
 const Exception403 = () => 403;
 
+/**
+ * 判断传入对象是否是React组件? 用来判断一个对象有没有被实例化?
+ */
 export const isComponentClass = (component: React.ComponentClass | React.ReactNode): boolean => {
   if (!component) return false;
   const proto = Object.getPrototypeOf(component);
@@ -14,10 +17,15 @@ export const isComponentClass = (component: React.ComponentClass | React.ReactNo
   return isComponentClass(proto);
 };
 
-// Determine whether the incoming component has been instantiated
-// AuthorizedRoute is already instantiated
-// Authorized  render is already instantiated, children is no instantiated
-// Secured is not instantiated
+/**
+ * 和PromiseRender里边类似, 也是检测传入的对象有没有被实例化?
+ * 没有实例化则把他变成实例以便渲染?
+ * 原antd注释如下:
+ * Determine whether the incoming component has been instantiated
+ * AuthorizedRoute is already instantiated
+ * Authorized  render is already instantiated, children is no instantiated
+ * Secured is not instantiated
+ */
 const checkIsInstantiation = (target: React.ComponentClass | React.ReactNode) => {
   if (isComponentClass(target)) {
     const Target = target as React.ComponentClass;
@@ -36,13 +44,8 @@ const checkIsInstantiation = (target: React.ComponentClass | React.ReactNode) =>
  * e.g. 'user,admin' user 和 admin 都能访问
  * e.g. ()=>boolean 返回true能访问,返回false不能访问
  * e.g. Promise  then 能访问   catch不能访问
- * e.g. authority support incoming string, () => boolean | Promise
- * e.g. 'user' only user user can access
- * e.g. 'user, admin' user and admin can access
- * e.g. () => boolean true to be able to visit, return false can not be accessed
- * e.g. Promise then can not access the visit to catch
- * @param {string | function | Promise} authority
- * @param {ReactNode} error 非必需参数
+ * @param {string | function | Promise} authority 可访问的权限
+ * @param {ReactNode} error 非必需参数, 如果没有权限访问则(返回)渲染这个组件
  */
 const authorize = (authority: string, error?: React.ReactNode) => {
   /**

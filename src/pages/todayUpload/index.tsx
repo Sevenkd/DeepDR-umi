@@ -1,13 +1,13 @@
-import { Tag, Modal } from 'antd';
+import { Tag } from 'antd';
 import React, { useState, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { TableListItem } from './data.d';
 import { queryItems } from './service';
-import Carousel from "react-images";
+import { connect, history } from 'umi';
+import { ConnectState } from '@/models/connect';
+import { FundusLightBox } from '@/components/FundusImages'
 
-import Lightbox from 'react-image-lightbox';
-import 'react-image-lightbox/style.css'; // This only needs to be imported once in your app
 
 /**
  * 表格中模型诊断的Tag标签
@@ -28,81 +28,50 @@ const ModelDiagnoseTag: React.FC<{}> = (props:any) => {
   );
 };
 
-
 /**
- * 眼底图像显示模块
- * 
- * 有点问题, 弃用
+ * 眼底照片列
  */
-const FundusImgModel: React.FC<{}> = (props:any) => {
-  const { images, isOpen, setOpen} = props;
+const FundusColumn: React.FC<{}> = (props:any) => {
+  const { images, loginCode } = props;
+
+  const [osOpen, setOsOpen] = useState<boolean>(false);
+  const [odOpen, setOdOpen] = useState<boolean>(false);
+
+  const osImages:any[] = images[0].map( (imgId:string) => ( "http://192.168.7.181:9005/api/dataManager/getFundusImageByID?login_code=" + loginCode + "&imgID=" + imgId ) )
+  const odImages:any[] = images[1].map( (imgId:string) => ( "http://192.168.7.181:9005/api/dataManager/getFundusImageByID?login_code=" + loginCode + "&imgID=" + imgId ) )
+
   return(
-    <Modal
-      title="左眼眼底图像"
-      centered
-      maskStyle={{filter: 'Alpha(Opacity=10, Style=0)',opacity: '0.10'}}
-      visible={isOpen}
-      footer={null}
-      onOk={() => setOpen(false)}
-      onCancel={() => setOpen(false)} >
-      <Carousel views={images} />
-    </Modal>
+    <div>
+      <div>
+        <a onClick={() => setOsOpen(true)} disabled={osImages.length == 0} >OS</a>
+        <FundusLightBox isOpen={osOpen} setOpen={setOsOpen} images={osImages} />
+      </div>
+      <br/>
+      <div>
+        <a onClick={() => setOdOpen(true)} disabled={odImages.length == 0} >OD</a>
+        <FundusLightBox isOpen={odOpen} setOpen={setOdOpen} images={odImages} />
+      </div>
+    </div>
   );
 };
-
-
-/**
- * 显示眼底图像的灯箱插件
- * 
- * 插件名称为 React Image Lightbox
- */
-const FundusLightBox: React.FC<{}> = (props:any) => {
-  const {images, isOpen, setOpen} = props
-  const [photoIndex, setPhotoIndex] = useState<number>(0);
-  // const [isOpen, setOpen] = useState<boolean>(false);
-
-  console.log("nextSrc", images[(photoIndex + 1) % images.length]);
-
-  const lightBox = isOpen ? (
-    <Lightbox
-      mainSrc={images[photoIndex]}
-      nextSrc={images[(photoIndex + 1) % images.length]}
-      prevSrc={images[(photoIndex + images.length - 1) % images.length]}
-      onCloseRequest={ () => setOpen(false) }
-      onMovePrevRequest={ () => setPhotoIndex((photoIndex + images.length - 1) % images.length) }
-      onMoveNextRequest={ () => setPhotoIndex((photoIndex + 1) % images.length) } 
-    />
-  ) : null;
-
-  return lightBox;
-}
-
 
 /**
  * 今日上传表格
  */
-const TodayUploadTable: React.FC<{}> = () => {
-
+const TodayUploadTable: React.FC<{}> = (props:any) => {
   const actionRef = useRef<ActionType>();
   const formRef = useRef<any>();
 
-  /**
-   * 这个地方有一个BUG
-   * 你对所有Carousel都使用一个变量来控制开合, 理论上是有错误的
-   * 
-   * 从表现上来看, 我点击多个不同病例的OS按钮, 显示的图片是相同的, 都是最后一组病例的OS图像
-   * 可以在父组件用数组来控制, 或者让自组件单独管理自己的开闭状态, 然后用父组件用ref来调用
-   * 或者其他更好的方法?
-   * 
-   * 我改用React Image Lightbox插件, 效果暂时还行, 你之后看看能不能再优化一下
-   */
-  // const [osOpen, setOsOpen] = useState<boolean>(false);
-  // const [odOpen, setOdOpen] = useState<boolean>(false);
-  const [isDis, setIsDia] = useState<boolean>(false)
+  const { loginCode=null, role } = props.currentUser;
 
   /**
    * 表格的column配置
    */
+  const hospitalFilters = role === 'admin' ? [
+    { text: '机器智能实验室', value: "1" },
+    { text: '成都市妇女儿童中心医院', value: "2" },
+    { text: '安岳县妇女儿童医院', value: "3" }
+  ] : false;
   const columns: ProColumns<TableListItem>[] = [
     {
       title: '病人编号',
@@ -139,48 +108,24 @@ const TodayUploadTable: React.FC<{}> = () => {
     {
       title: '上传医院',
       dataIndex: 'hospitalName',
-      /**
-       * TODO
-       * 按照用户权限区分
-       * 如果是admin则显示筛选, 否则不显示(因为非admin用户只能看到自己医院的数据)
-       */
-      filters: [
-        { text: '机器智能实验室', value: "MILAB" },
-        { text: '成都市妇女儿童中心医院', value: "WCCH" }
-      ],
+      filters: hospitalFilters,
     },
     {
       title: '眼底图片',
       dataIndex: 'images',
       search: false,
-      render: (images:any) => {
-        const osImages:any[] = images[0].map( (imgId:string) => ( "http://192.168.7.181:9005/api/dataManager/getFundusImageByID?login_code=EE0F263BA09519E6B37F1501AA935215&imgID=" + imgId ) )
-        const odImages:any[] = images[1].map( (imgId:string) => ( "http://192.168.7.181:9005/api/dataManager/getFundusImageByID?login_code=EE0F263BA09519E6B37F1501AA935215&imgID=" + imgId ) )
-
-        // const osImages:any[] = images[0].map((imgId:string) => ({ source: "http://192.168.7.181:9005/api/dataManager/getFundusImageByID?login_code=EE0F263BA09519E6B37F1501AA935215&imgID=" + imgId }) )
-        // const odImages:any[] = images[1].map((imgId:string) => ({ source: "http://192.168.7.181:9005/api/dataManager/getFundusImageByID?login_code=EE0F263BA09519E6B37F1501AA935215&imgID=" + imgId }) )
-        
-        const [osOpen, setOsOpen] = useState<boolean>(false);
-        const [odOpen, setOdOpen] = useState<boolean>(false);
-
-        return(
-          <div>
-            <div>
-              <a onClick={() => setOsOpen(true)} disabled={osImages.length == 0} >OS</a>
-              <FundusLightBox isOpen={osOpen} setOpen={setOsOpen} images={osImages} />
-            </div>
-            <br/>
-            <div>
-              <a onClick={() => setOdOpen(true)} disabled={odImages.length == 0} >OD</a>
-              <FundusLightBox isOpen={odOpen} setOpen={setOdOpen} images={odImages} />
-            </div>
-          </div>
-        )
-      }
+      render: (images:any) => <FundusColumn images={images} loginCode={loginCode} />
     },
     {
       title: '模型诊断结果',
       dataIndex: 'modelResults',
+      filters: [
+        { text: '诊断中', value: "PROCESSING" },
+        { text: '正常', value: "正常" },
+        { text: 'ROP轻度', value: "ROP轻度" },
+        { text: 'ROP重度', value: "ROP重度" },
+        { text: '其他异常', value: "其他异常" }
+      ],
       render: (results:any) => {
         return(
           <div>
@@ -194,11 +139,37 @@ const TodayUploadTable: React.FC<{}> = () => {
     {
       title: '医生诊断',
       dataIndex: 'doctorDiagnose',
+      filters: [
+        { text: '未诊断', value: "0" },
+        { text: '已诊断', value: "1" },
+      ],
       search: false,
-      render: () => { return ( <div> <a onClick={() => setIsDia(true)}>诊断</a> </div> ); },
+      render: (diagnose, row, index) => { 
+        const toDiagnosePage = () => {
+          history.push({
+            pathname: '/records/docDiagnose',
+            query: {
+              uploadID: row.key,
+              redirect: props.location.pathname,
+            },
+          });
+        }
+
+        const [ boxOpen, setBoxOpen ] = useState<boolean>(false)
+        const reportImg = diagnose === "-" ? [] : ["http://192.168.7.181:9005/api/dataManager/getReportByUploadID?login_code=" + loginCode + "&uploadID="+row.key]
+
+        return diagnose === "-" ? 
+        (<div> <a onClick={toDiagnosePage} >诊断</a> </div>) : (
+          <div>
+            <a onClick={()=>{setBoxOpen(true)}}>查看诊断报告</a>
+            <FundusLightBox isOpen={boxOpen} setOpen={setBoxOpen} images={reportImg} ifPrintReport={true} uploadID={row.key} />
+            <br/>
+         <p>{diagnose.doctorName}在{diagnose.diagnoseTime}诊断</p>
+         </div>
+        );
+      },
     },
   ];
-
 
   return (
     <PageContainer>
@@ -208,6 +179,10 @@ const TodayUploadTable: React.FC<{}> = () => {
         actionRef={actionRef} // 表格操作的索引
         formRef={formRef}     // 搜索表单的索引
         rowKey="key"          // 每一行item的key
+        pagination={{         // 分页设置
+            defaultPageSize:5,
+            pageSizeOptions: ["5", "10", "20", "50"]
+          }}
 
         beforeSearchSubmit={
           /**
@@ -243,7 +218,7 @@ const TodayUploadTable: React.FC<{}> = () => {
 
         request={(params: any, sorter: any, filter: any) => {
           console.log("request", params, sorter, filter);
-          return queryItems({ ...params, sorter, filter })
+          return queryItems({ ...params, sorter, filter , login_code:loginCode})
         }}
 
         columns={columns}
@@ -254,5 +229,6 @@ const TodayUploadTable: React.FC<{}> = () => {
     </PageContainer>
   );
 };
-
-export default TodayUploadTable;
+export default connect(({ user }: ConnectState) => ({ 
+  currentUser: user.currentUser,
+}))(TodayUploadTable);

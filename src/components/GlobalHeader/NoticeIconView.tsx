@@ -1,3 +1,8 @@
+/**
+ * 感觉是右侧用户站内消息栏
+ * 
+ * 后期可以实现一下子
+ */
 import React, { Component } from 'react';
 import { connect, ConnectProps } from 'umi';
 import { Tag, message } from 'antd';

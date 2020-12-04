@@ -48,7 +48,7 @@ export default defineConfig({
           authority: ['admin', 'user'],
           routes: [
             {
-              path: '/',
+              path: "/",
               redirect: '/records/todayUpload',
             },
             {
@@ -58,6 +58,7 @@ export default defineConfig({
               routes:[
                 {
                   path: '/records/todayUpload',
+                  // authority: ['admin'],
                   name: 'today',
                   icon: 'table',
                   component: './todayUpload',
@@ -67,6 +68,20 @@ export default defineConfig({
                   name: 'searchRecords',
                   icon: 'table',
                   component: './searchRecords',
+                },
+                {
+                  path: '/records/docDiagnose',
+                  // name: 'docDiagnose',
+                  // authority: ['user'],
+                  icon: 'table',
+                  component: './docDiagnose',
+                },
+                {
+                  path: '/records/printReport',
+                  // name: 'docDiagnose',
+                  // authority: ['user'],
+                  // icon: 'table',
+                  component: './printPage',
                 },
               ]
             },

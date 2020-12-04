@@ -1,19 +1,26 @@
 import request from '@/utils/request';
-import { TableTodayParams } from './data.d';
-
 
 /**
- * 查询表格条目
- * 
- * TODO:
- * 这里附加login_code
+ * 表格查询字段
+ * 不仅包含查询用的params
+ * 还包含sorter和filter
  */
-export async function queryItems(params?: TableTodayParams) {
+export interface TableTodayParams {
+  login_code: string;
+  pageSize: number;
+  current: number;
+  filter: { [key: string]: any[] };
+  sorter: { [key: string]: any };
+}
+export async function queryItems(params: TableTodayParams, ) {
   return request('/api/searchManager/tableToday', {
     method: 'POST',
     data: {
-      ...params, 
-      login_code: "EE0F263BA09519E6B37F1501AA935215"
+      login_code: params.login_code,
+      pageSize: params.pageSize,
+      current: params.current,
+      filter: params.filter ? JSON.stringify(params.filter) : null,
+      sorter: params.sorter ? JSON.stringify(params.sorter) : null,
     },
     requestType: 'form',
   });

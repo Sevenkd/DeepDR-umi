@@ -1,3 +1,6 @@
+/**
+ * 用户layout, 主要是用户登录页面的总体布局
+ */
 import { DefaultFooter, MenuDataItem, getMenuData, getPageTitle } from '@ant-design/pro-layout';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { Link, SelectLang, useIntl, ConnectProps, connect, FormattedMessage } from 'umi';
@@ -13,26 +16,14 @@ export interface UserLayoutProps extends Partial<ConnectProps> {
 }
 
 const UserLayout: React.FC<UserLayoutProps> = (props) => {
-  const {
-    route = {
-      routes: [],
-    },
-  } = props;
-  const { routes = [] } = route;
-  const {
-    children,
-    location = {
-      pathname: '',
-    },
-  } = props;
+  const { route={routes: []} } = props;
+  const { routes=[] } = route;
+  const { children, location={pathname: ''} } = props;
+
   const { formatMessage } = useIntl();
   const { breadcrumb } = getMenuData(routes);
-  const title = getPageTitle({
-    pathname: location.pathname,
-    formatMessage,
-    breadcrumb,
-    ...props,
-  });
+  const title = getPageTitle({ pathname: location.pathname, formatMessage, breadcrumb, ...props, });
+
   return (
     <HelmetProvider>
       <Helmet>
@@ -41,25 +32,27 @@ const UserLayout: React.FC<UserLayoutProps> = (props) => {
       </Helmet>
 
       <div className={styles.container}>
+        {/* 
+        TODO: 语言选择
         <div className={styles.lang}>
           <SelectLang />
-        </div>
+        </div> 
+        */}
         <div className={styles.content}>
           <div className={styles.top}>
             <div className={styles.header}>
-              <Link to="/">
+              <Link to={'/user/login'}>
                 <img alt="logo" className={styles.logo} src={logo} />
-                <span className={styles.title}>Ant Design</span>
+                <span className={styles.title}>Deep ROP | 登录</span>
               </Link>
             </div>
             <div className={styles.desc}>
-              <FormattedMessage
-                id="pages.layouts.userLayout.title"
-                defaultMessage="Ant Design 是西湖区最具影响力的 Web 设计规范"
-              />
+              <FormattedMessage id="pages.layouts.userLayout.title" defaultMessage="Deep ROP新生儿眼底智能诊断平台" />
             </div>
           </div>
+          
           {children}
+
         </div>
         <DefaultFooter />
       </div>

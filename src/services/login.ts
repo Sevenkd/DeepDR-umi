@@ -1,19 +1,33 @@
 import request from '@/utils/request';
 
-export interface LoginParamsType {
-  userName: string;
-  password: string;
-  mobile: string;
-  captcha: string;
-}
-
-export async function fakeAccountLogin(params: LoginParamsType) {
-  return request('/api/login/account', {
+/**
+ * 与后台交互: 用户登录
+ * 
+ * @param username: 用户名
+ * @param password: 密码
+ */
+export interface LoginParamsType { username: string; password: string; }
+export async function loginUser(params: LoginParamsType) {
+  return request('/api/authorizations/login', {
     method: 'POST',
     data: params,
+    requestType: 'form',
   });
 }
 
-export async function getFakeCaptcha(mobile: string) {
-  return request(`/api/login/captcha?mobile=${mobile}`);
+/**
+ * 与后台交互: 用户注销登录
+ * 
+ * @param {string} login_code 用户登录标识
+ */
+interface LogoutParamsType {login_code: string }
+export async function logOutUser(params: LogoutParamsType) {
+  return request('/api/authorizations/logout', {
+    method: 'POST',
+    data: params,
+    requestType: 'form',
+  });
 }
+
+
+

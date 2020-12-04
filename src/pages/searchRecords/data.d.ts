@@ -35,23 +35,10 @@ export interface TableListPagination {
   current: number;
 }
 
-
 export interface TableListData {
   list: TableListItem[];
   pagination: Partial<TableListPagination>;
 }
 
-/**
- * 表格查询字段
- * 不仅包含查询用的params
- * 还包含sorter和filter
- */
-export interface TableTodayParams {
-  patientNum?: string;
-  patientName?: string;
-  pageSize?: number;
-  currentPage?: number;
-  filter?: { [key: string]: any[] };
-  sorter?: { [key: string]: any };
-}
+
   

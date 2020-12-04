@@ -1,3 +1,7 @@
+/**
+ * 应该是一些系统全局的控制变量
+ * 比如说菜单是否展开等, notice是消息列表, 可用把消息列表在用户访问basicLayout时候刷新, 后期实现消息功能
+ */
 import { Reducer, Effect } from 'umi';
 
 import { NoticeIconData } from '@/components/NoticeIcon';
