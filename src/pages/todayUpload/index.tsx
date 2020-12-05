@@ -162,7 +162,8 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
         (<div> <a onClick={toDiagnosePage} >诊断</a> </div>) : (
           <div>
             <a onClick={()=>{setBoxOpen(true)}}>查看诊断报告</a>
-            <FundusLightBox isOpen={boxOpen} setOpen={setBoxOpen} images={reportImg} ifPrintReport={true} uploadID={row.key} />
+            <FundusLightBox isOpen={boxOpen} setOpen={setBoxOpen} images={reportImg} ifPrintReport={true} 
+                            uploadID={row.key} ifDownloadReport={true} loginCode={loginCode} />
             <br/>
          <p>{diagnose.doctorName}在{diagnose.diagnoseTime}诊断</p>
          </div>

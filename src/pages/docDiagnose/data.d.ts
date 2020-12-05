@@ -79,14 +79,14 @@ export const zoneStr = {
 }
 export const plusStr = {
   0: "",
-  1: "前PLUS",
-  2: "PLUS",
+  1: "前Plus",
+  2: "Plus",
 }
 // 分期正常的情况下也有可能发生PLUS改变
 export const stage_0PlusStr = {
   0: "",
-  1: "未见明显ROP异常, 伴随前PLUS改变",
-  2: "未见明显ROP异常, 伴随PLUS改变",
+  1: "未见明显ROP异常, 伴随前Plus改变",
+  2: "未见明显ROP异常, 伴随Plus改变",
 }
 export const diseaseStr = {
   '无异常': '无异常', 

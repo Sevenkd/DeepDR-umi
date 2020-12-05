@@ -3,8 +3,6 @@ import Lightbox from 'react-image-lightbox';
 import { Button } from 'antd';
 import { history } from 'umi';
 
-
-
 /**
  * 眼底图像灯箱组件
  * 
@@ -18,6 +16,7 @@ import { history } from 'umi';
  * @param { (inx: number) => void } setTypicalID 设置诊断报告图像的上层回调函数, 输入当前图像的索引, 由上层函数根据索引获取图像ID, 如果ifSetTypicalImg为真, 则必须
  * @param { boolean } outsideToClose 点击图像外界是否关闭组件, 默认 false
  * @param { boolean } ifPrintReport 是否显示打印报告的按钮
+ * @param { boolean } ifDownloadReport 是否显示下载诊断报告的按钮
  */
 interface FundusLightBoxProps { 
   images: string[], 
@@ -29,12 +28,17 @@ interface FundusLightBoxProps {
   setTypicalID?: React.ReactNode[]
   outsideToClose?: boolean
   ifPrintReport?: boolean
+  ifDownloadReport?: boolean
+  loginCode?: string
 }
 export const FundusLightBox: React.FC<FundusLightBoxProps> = (props:any) => {
+  // const { currentUser } = props;
   const { images, isOpen, setOpen, stopOnEdge=true, outsideToClose=false } = props;
   const { ifPrintReport=false, uploadID="-1" } = props; // 打印诊断报告按钮
   const { ifSetTypicalImg=false, setTypicalID=()=>{} } = props; // 设为报告图像按钮
-  const [photoIndex, setPhotoIndex] = useState<number>(0);
+  const { ifDownloadReport=false, loginCode="-1" } = props; // 设为报告图像按钮
+
+  const [ photoIndex, setPhotoIndex ] = useState<number>(0);
   // 当数组越界的时候返回undefined, 自动无法跳跃到下一张或上一张, 所以无须再做验证
   const nextIndex = stopOnEdge ? photoIndex + 1 : (photoIndex + 1) % images.length;
   const prevIndex = stopOnEdge ? photoIndex - 1 : (photoIndex + images.length - 1) % images.length;
@@ -58,9 +62,18 @@ export const FundusLightBox: React.FC<FundusLightBoxProps> = (props:any) => {
     });
     setOpen(false)
   };
+  /**
+   * 下载诊断报告的操作
+   */
+  const onDownLoadReportButtonClick = () => {
+    const reportUrl = "http://192.168.7.181:9005/api/dataManager/downloadReportByUploadID?login_code=" + loginCode + "&uploadID=" + uploadID;
+    window.open(reportUrl);
+  };
 
-  const typicalImgButton = ifSetTypicalImg ? [<Button type="primary" onClick={onTypicalImgButtonClick} >设为报告图像</Button>] : [];
-  const downloadButton = ifPrintReport ? [<Button type="primary" onClick={onPrintReportButtonClick} >打印诊断报告</Button>] : [];
+  const typicalImgButton = ifSetTypicalImg ? [<Button type="primary" style={{ margin: "0 10px 0 0" }} onClick={onTypicalImgButtonClick} >设为报告图像</Button>] : [];
+  const printReportButton = ifPrintReport ? [<Button type="primary" style={{ margin: "0 10px 0 0" }} onClick={onPrintReportButtonClick} >打印诊断报告</Button>] : [];
+  const downloadReportButton = ifDownloadReport ? [<Button type="primary" style={{ margin: "0 10px 0 0" }} onClick={onDownLoadReportButtonClick} >下载诊断报告</Button>] : [];
+
 
   const lightBox = isOpen ? (
     <Lightbox
@@ -71,7 +84,7 @@ export const FundusLightBox: React.FC<FundusLightBoxProps> = (props:any) => {
       onMovePrevRequest={ () => setPhotoIndex(prevIndex) }
       onMoveNextRequest={ () => setPhotoIndex(nextIndex) } 
       animationOnKeyInput={true}
-      toolbarButtons={ [ ...typicalImgButton, ...downloadButton] } // 工具栏按钮
+      toolbarButtons={ [ ...typicalImgButton, ...printReportButton, ...downloadReportButton] } // 工具栏按钮
       clickOutsideToClose={outsideToClose}
 
     />
@@ -79,28 +92,11 @@ export const FundusLightBox: React.FC<FundusLightBoxProps> = (props:any) => {
 
   return lightBox;
 };
+// export connect(({ user }: ConnectState) => ({ 
+//   currentUser: user.currentUser,
+// }))(FundusLightBox);
 
 
 
-/**
- * 
- * 
-@page {
-    size: A4;
-    margin: 0;
-}
- 
-@media print {
-    html, body {
-        min-width: 0;
-        width: 210mm; 
-        height: 297mm;
-    }
-    .print-hide {
-        visibility: hidden!important;
-        display: none!important;
-    }
-}
 
- */
   
