@@ -94,18 +94,18 @@ const EyeDiagnoseModel: React.FC<EyeDiagnoseModelProps> = (props:EyeDiagnoseMode
     let ropStr = ""
     if ( stage === 0 ) { ropStr = stage_0PlusStr[plus] } // 分期正常的情况下也有可能发生PLUS改变
     else if ( stage === 6 ) { ropStr = "急进型后极部ROP"; }
-    else { ropStr = stageStr[stage] + (regression ? "(退行期)" : "") + zoneStr[zone] + (plus === 0 ? "" : ", "+plusStr[plus]); } 
+    else { ropStr = stageStr[stage] + (regression ? "（退行期）" : "") + zoneStr[zone] + (plus === 0 ? "" : "，"+plusStr[plus]); } 
 
     // 其他病变部分
     let otherDisease = ""
     if (otherDiagnoseCheckedList[0] === '无异常') { return ropStr; } // 如果没有其他病变, 只返回ROP相关的描述
     else { 
       const diseaseStrList = otherDiagnoseCheckedList.map((item:string)=>diseaseStr[item]);
-      otherDisease = diseaseStrList.join(", ");
+      otherDisease = diseaseStrList.join("，");
     }
 
     // 组合诊断语句
-    const finalStr = ropStr === "" ? otherDisease : ropStr + ", " + otherDisease;
+    const finalStr = ropStr === "" ? otherDisease : ropStr + "，" + otherDisease;
     return finalStr;
   }
 
