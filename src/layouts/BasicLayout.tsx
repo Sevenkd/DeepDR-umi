@@ -41,7 +41,7 @@ const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] =>{
 /**
  * Footer
  */
-const defaultFooterDom = ( <DefaultFooter copyright={`${new Date().getFullYear()} 四川大学机器智能实验室`} /> );
+const defaultFooterDom = ( <DefaultFooter links={[]} copyright={`${new Date().getFullYear()} 四川大学机器智能实验室`} /> );
 
 /**
  * 主业务界面的基本布局
