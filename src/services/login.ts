@@ -1,4 +1,5 @@
 import request from '@/utils/request';
+import baseUrl from './baseUrl';
 
 /**
  * 与后台交互: 用户登录
@@ -8,7 +9,7 @@ import request from '@/utils/request';
  */
 export interface LoginParamsType { username: string; password: string; }
 export async function loginUser(params: LoginParamsType) {
-  return request('/api/authorizations/login', {
+  return request(baseUrl + '/api/authorizations/login', {
     method: 'POST',
     data: params,
     requestType: 'form',
@@ -22,7 +23,7 @@ export async function loginUser(params: LoginParamsType) {
  */
 interface LogoutParamsType {login_code: string }
 export async function logOutUser(params: LogoutParamsType) {
-  return request('/api/authorizations/logout', {
+  return request(baseUrl + '/api/authorizations/logout', {
     method: 'POST',
     data: params,
     requestType: 'form',

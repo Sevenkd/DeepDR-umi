@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Lightbox from 'react-image-lightbox';
 import { Button } from 'antd';
 import { history } from 'umi';
+import { getReportPDFURL } from '@/utils/srcUrls';
 
 /**
  * 眼底图像灯箱组件
@@ -66,7 +67,7 @@ export const FundusLightBox: React.FC<FundusLightBoxProps> = (props:any) => {
    * 下载诊断报告的操作
    */
   const onDownLoadReportButtonClick = () => {
-    const reportUrl = "http://192.168.7.181:9005/api/dataManager/downloadReportByUploadID?login_code=" + loginCode + "&uploadID=" + uploadID;
+    const reportUrl = getReportPDFURL(loginCode, uploadID);
     window.open(reportUrl);
   };
 

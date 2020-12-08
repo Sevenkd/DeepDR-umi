@@ -1,11 +1,12 @@
 import request from 'umi-request';
+import baseUrl from './baseUrl';
 
 /**
  * 从后台查询病例的详细信息(包括诊断信息和基本信息)
  */
 interface queryRecordInfoParams { login_code: string, uploadID: number }
 export async function queryRecordInfo(params: queryRecordInfoParams) {
-  return  request('/api/dataManager/getRecordInfo', {
+  return  request(baseUrl + '/api/dataManager/getRecordInfo', {
             method: 'POST',
             data: params,
             requestType: 'form',
@@ -27,8 +28,7 @@ interface submitDiagnoseParams {
   diagnosticOpinion: string,
 }
 export async function submitDiagnose(params: submitDiagnoseParams) {
-  console.log("submitDiagnose", params);
-  return  request('/api/dataManager/submitDiagnose', {
+  return  request(baseUrl + '/api/dataManager/submitDiagnose', {
             method: 'POST',
             data: params,
             requestType: 'form',

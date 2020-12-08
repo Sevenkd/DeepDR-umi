@@ -1,4 +1,5 @@
 import request from '@/utils/request';
+import baseUrl from './baseUrl';
 
 /**
  * 通过loginCode查询用户登录信息
@@ -7,7 +8,7 @@ import request from '@/utils/request';
  */
 export interface fetchUserByLoginCodeParamsType { login_code: string; }
 export async function fetchUserByLoginCode(params: fetchUserByLoginCodeParamsType) {
-  return request('/api/authorizations/fetchUserByLoginCode', {
+  return request(baseUrl + '/api/authorizations/fetchUserByLoginCode', {
     method: 'POST',
     data: params,
     requestType: 'form',

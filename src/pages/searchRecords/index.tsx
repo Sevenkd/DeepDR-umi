@@ -3,10 +3,11 @@ import React, { useState, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { TableListItem } from './data.d';
-import { query_SearchRecords } from './service';
+import { query_SearchRecords } from '@/services/searchRecords';
 import { connect, history } from 'umi';
 import { ConnectState } from '@/models/connect';
-import { FundusLightBox } from '@/components/FundusImages'
+import { FundusLightBox } from '@/components/FundusImages';
+import { getFundusImgURL, getReportImgURL } from '@/utils/srcUrls';
 
 
 /**
@@ -37,8 +38,8 @@ const FundusColumn: React.FC<{}> = (props:any) => {
   const [osOpen, setOsOpen] = useState<boolean>(false);
   const [odOpen, setOdOpen] = useState<boolean>(false);
 
-  const osImages:any[] = images[0].map( (imgId:string) => ( "http://192.168.7.181:9005/api/dataManager/getFundusImageByID?login_code=" + loginCode + "&imgID=" + imgId ) )
-  const odImages:any[] = images[1].map( (imgId:string) => ( "http://192.168.7.181:9005/api/dataManager/getFundusImageByID?login_code=" + loginCode + "&imgID=" + imgId ) )
+  const osImages:any[] = images[0].map( (imgId:string) => ( getFundusImgURL(loginCode, imgId) ) )
+  const odImages:any[] = images[1].map( (imgId:string) => ( getFundusImgURL(loginCode, imgId) ) )
 
   return(
     <div>
@@ -157,14 +158,16 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
           });
         }
 
+        // 病例报告图像显示
         const [ boxOpen, setBoxOpen ] = useState<boolean>(false)
-        const reportImg = diagnose === "-" ? [] : ["http://192.168.7.181:9005/api/dataManager/getReportByUploadID?login_code=" + loginCode + "&uploadID="+row.key]
+        const reportImg = diagnose === "-" ? [] : [ getReportImgURL(loginCode, row.key) ]
 
         return diagnose === "-" ? 
         (<div> <a onClick={toDiagnosePage} >诊断</a> </div>) : (
           <div>
             <a onClick={()=>{setBoxOpen(true)}}>查看诊断报告</a>
-            <FundusLightBox isOpen={boxOpen} setOpen={setBoxOpen} images={reportImg} ifPrintReport={true} uploadID={row.key} />
+            <FundusLightBox isOpen={boxOpen} setOpen={setBoxOpen} images={reportImg} loginCode={loginCode}
+                            ifPrintReport={true} ifDownloadReport={true} uploadID={row.key} />
             <br/>
          <p>{diagnose.doctorName}在{diagnose.diagnoseTime}诊断</p>
          </div>
