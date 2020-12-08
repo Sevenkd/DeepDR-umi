@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Lightbox from 'react-image-lightbox';
 import { Button } from 'antd';
 import { history } from 'umi';
+import { getReportPDFURL } from '@/utils/srcUrls';
 
 /**
  * 眼底图像灯箱组件
@@ -50,6 +51,10 @@ export const FundusLightBox: React.FC<FundusLightBoxProps> = (props:any) => {
     setTypicalID(photoIndex)
     setOpen(false);
   };
+  const onUnsetTypicalImgButtonClick = () => {
+    setTypicalID(null);
+    setOpen(false);
+  };
   /**
    * 将图像设为报告图像的操作
    */
@@ -66,11 +71,14 @@ export const FundusLightBox: React.FC<FundusLightBoxProps> = (props:any) => {
    * 下载诊断报告的操作
    */
   const onDownLoadReportButtonClick = () => {
-    const reportUrl = "http://192.168.7.181:9005/api/dataManager/downloadReportByUploadID?login_code=" + loginCode + "&uploadID=" + uploadID;
+    const reportUrl = getReportPDFURL(loginCode, uploadID);
     window.open(reportUrl);
   };
 
-  const typicalImgButton = ifSetTypicalImg ? [<Button type="primary" style={{ margin: "0 10px 0 0" }} onClick={onTypicalImgButtonClick} >设为报告图像</Button>] : [];
+  const typicalImgButton = ifSetTypicalImg ? [
+  <Button type="primary" style={{ margin: "0 10px 0 0" }} onClick={onTypicalImgButtonClick} >设为报告图像</Button>, 
+  <Button type="primary" style={{ margin: "0 10px 0 0" }} onClick={onUnsetTypicalImgButtonClick} >设置报告无图像</Button>
+  ] : [];
   const printReportButton = ifPrintReport ? [<Button type="primary" style={{ margin: "0 10px 0 0" }} onClick={onPrintReportButtonClick} >打印诊断报告</Button>] : [];
   const downloadReportButton = ifDownloadReport ? [<Button type="primary" style={{ margin: "0 10px 0 0" }} onClick={onDownLoadReportButtonClick} >下载诊断报告</Button>] : [];
 

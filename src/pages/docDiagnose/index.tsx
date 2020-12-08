@@ -45,7 +45,6 @@ class DocDiagnose extends React.Component<DocDiagnoseProps, DocDiagnoseState> {
   // 退出页面时清空病例数据
   componentWillUnmount() {
     const { dispatch } = this.props; 
-    console.log("componentWillUnmount");
     dispatch({ type: 'recordDiagnoseInfo/clearRecord' });
   }
 
@@ -124,7 +123,7 @@ class DocDiagnose extends React.Component<DocDiagnoseProps, DocDiagnoseState> {
               </Col> 
               </Row>
 
-              <Divider style={{ marginBottom: 32 }}>诊断意见</Divider>
+              <Divider style={{ marginBottom: 32 }}>处理意见</Divider>
               <DiagnoseAdvice diagnosticOpinion={diagnosticOpinion} dispatch={dispatch} />
             </div>
           </Card>
@@ -133,7 +132,10 @@ class DocDiagnose extends React.Component<DocDiagnoseProps, DocDiagnoseState> {
             <Row>
               {/* <a>上一例</a> <a>下一例</a> */}
               <Col span={4}>  </Col>
-              <Col span={4} push={7}> <Button type="primary" onClick={onSubmitDiagnose} >提交诊断</Button> </Col>
+              <Col span={1} push={6}> <Space>
+                <Button type="primary" onClick={onSubmitDiagnose} >提交诊断</Button>
+                <Button onClick={()=>{history.goBack()}} >返回</Button> 
+              </ Space> </Col>
               <Col span={5} push={15}>  </Col>
             </Row>
           </Card>

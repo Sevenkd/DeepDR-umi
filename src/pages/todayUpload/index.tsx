@@ -3,10 +3,11 @@ import React, { useState, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { TableListItem } from './data.d';
-import { queryItems } from './service';
+import { queryItems } from '@/services/todayUpload';
 import { connect, history } from 'umi';
 import { ConnectState } from '@/models/connect';
 import { FundusLightBox } from '@/components/FundusImages'
+import { getFundusImgURL, getReportImgURL } from '@/utils/srcUrls';
 
 
 /**
@@ -37,8 +38,8 @@ const FundusColumn: React.FC<{}> = (props:any) => {
   const [osOpen, setOsOpen] = useState<boolean>(false);
   const [odOpen, setOdOpen] = useState<boolean>(false);
 
-  const osImages:any[] = images[0].map( (imgId:string) => ( "http://192.168.7.181:9005/api/dataManager/getFundusImageByID?login_code=" + loginCode + "&imgID=" + imgId ) )
-  const odImages:any[] = images[1].map( (imgId:string) => ( "http://192.168.7.181:9005/api/dataManager/getFundusImageByID?login_code=" + loginCode + "&imgID=" + imgId ) )
+  const osImages:any[] = images[0].map( (imgId:string) => ( getFundusImgURL(loginCode, imgId) ) )
+  const odImages:any[] = images[1].map( (imgId:string) => ( getFundusImgURL(loginCode, imgId) ) )
 
   return(
     <div>
@@ -156,7 +157,7 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
         }
 
         const [ boxOpen, setBoxOpen ] = useState<boolean>(false)
-        const reportImg = diagnose === "-" ? [] : ["http://192.168.7.181:9005/api/dataManager/getReportByUploadID?login_code=" + loginCode + "&uploadID="+row.key]
+        const reportImg = diagnose === "-" ? [] : [ getReportImgURL(loginCode, row.key) ]
 
         return diagnose === "-" ? 
         (<div> <a onClick={toDiagnosePage} >诊断</a> </div>) : (
@@ -218,7 +219,6 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
         search={false}
 
         request={(params: any, sorter: any, filter: any) => {
-          console.log("request", params, sorter, filter);
           return queryItems({ ...params, sorter, filter , login_code:loginCode})
         }}
 

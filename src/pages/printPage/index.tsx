@@ -3,6 +3,8 @@ import ReactToPrint from 'react-to-print';
 import { connect, history } from 'umi';
 import { ConnectState } from '@/models/connect';
 import { Col, Row, Button, Space } from 'antd';
+import { getReportImgURL } from '@/utils/srcUrls';
+
 
 const PrintComponet: React.FC<{}> = (props:any) => {
   const componentRef = useRef();
@@ -21,7 +23,7 @@ const PrintComponet: React.FC<{}> = (props:any) => {
         <Col span={5}><Space /></Col>
         <Col span={14}>
           <img 
-            src={"http://192.168.7.181:9005/api/dataManager/getReportByUploadID?login_code=" + loginCode + "&uploadID="+uploadID} 
+            src={ getReportImgURL(loginCode, uploadID) } 
             ref={componentRef} 
             style={{
               width: "21cm",

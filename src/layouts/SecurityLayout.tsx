@@ -9,7 +9,6 @@ import { Redirect, connect, ConnectProps } from 'umi';
 import { stringify } from 'querystring';
 import { ConnectState } from '@/models/connect';
 import { CurrentUser } from '@/models/user';
-
 import 'react-image-lightbox/style.css'; // 灯箱插件样式 This only needs to be imported once in your app
 
 /**

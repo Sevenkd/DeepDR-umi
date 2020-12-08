@@ -6,8 +6,8 @@
 import { Descriptions, Row, Input, Modal, Button, Radio, Checkbox } from 'antd';
 import React, { useState, useEffect, Dispatch } from 'react';
 import { PatientInfoProps, stageStr, zoneStr, plusStr, stage_0PlusStr, diseaseStr, adviceStrDict} from './data.d';
-import { getImgListFromIDs } from '@/utils/myUtils';
 import { FundusLightBox } from '@/components/FundusImages';
+import { getFundusImgURL } from '@/utils/srcUrls';
 
 
 /**
@@ -38,15 +38,17 @@ export const FundusImagesBox: React.FC<FundusImagesBoxProps> = (props) => {
 
   const [ boxOpen, setBoxOpen ] = useState<boolean>(false);
 
-  const imgList: string[] = getImgListFromIDs(imageIDs, loginCode);
-  const tpicalImg: string = getImgListFromIDs([typicalID], loginCode)[0]
+  const imgList: string[] = imageIDs.map( (imgID:string) => getFundusImgURL(loginCode, imgID) );
+  const tpicalImg: string =  getFundusImgURL(loginCode, typicalID ? typicalID : "blank");
 
   const setTypicalID = (index:number) => { setTypical(imageIDs[index]) }
+
+  const fundusLightBox = imgList.length === 0 ? null : <FundusLightBox isOpen={boxOpen} setOpen={setBoxOpen} images={imgList} stopOnEdge={true} ifSetTypicalImg={true} setTypicalID={setTypicalID} />;
 
   return (
     <div>
       <img style={ {width:"100%"} } src={tpicalImg} onClick={()=> {setBoxOpen(true)}}  />
-      <FundusLightBox isOpen={boxOpen} setOpen={setBoxOpen} images={imgList} stopOnEdge={true} ifSetTypicalImg={true} setTypicalID={setTypicalID} />
+      {fundusLightBox}
     </div>
   );
 };
