@@ -110,9 +110,8 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
     {
       title: '上传医院',
       dataIndex: 'hospitalName',
-      valueEnum: hospitalFilters,
-      // filters: hospitalFilters,
-      search: role === 'admin' ? true : false,
+      filters: hospitalFilters,
+      search: false,
     },
     {
       title: '眼底图片',
@@ -123,7 +122,7 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
     {
       title: '模型诊断结果',
       dataIndex: 'modelResults',
-      // search: false,
+      search: false,
       filters: [
         { text: '诊断中', value: "PROCESSING" },
         { text: '正常', value: "正常" },
@@ -132,7 +131,6 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
         { text: '其他异常', value: "其他异常" }
       ],
       render: (results:any) => {
-        console.log("results", results);
         return(
           <div>
             < ModelDiagnoseTag results={results[0]} />
@@ -145,8 +143,8 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
     {
       title: '医生诊断',
       dataIndex: 'doctorDiagnose',
-      // search: false,
-      valueEnum: [
+      search: false,
+      filters: [
         { text: '未诊断', value: "0" },
         { text: '已诊断', value: "1" },
       ],
