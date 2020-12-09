@@ -1,4 +1,4 @@
-import { Tag } from 'antd';
+import { message, Space, Tag } from 'antd';
 import React, { useState, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -118,7 +118,7 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
       render: (images:any) => <FundusColumn images={images} loginCode={loginCode} />
     },
     {
-      title: '模型诊断结果',
+      title: 'A.I.初诊结果',
       dataIndex: 'modelResults',
       filters: [
         { text: '诊断中', value: "PROCESSING" },
@@ -155,12 +155,17 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
             },
           });
         }
+        const onConsultationBtnClick = () => { message.success("会诊请求发送成功"); }
+        const unDiagnosedBtn = (
+        <div> <Space>
+          <a onClick={toDiagnosePage} >诊断</a> 
+          { role === 'admin' ? null : <a onClick={onConsultationBtnClick} >请求远程会诊</a> } 
+        </Space></div>);
 
-        const [ boxOpen, setBoxOpen ] = useState<boolean>(false)
-        const reportImg = diagnose === "-" ? [] : [ getReportImgURL(loginCode, row.key) ]
+        const [ boxOpen, setBoxOpen ] = useState<boolean>(false);
+        const reportImg = diagnose === "-" ? [] : [ getReportImgURL(loginCode, row.key) ];
 
-        return diagnose === "-" ? 
-        (<div> <a onClick={toDiagnosePage} >诊断</a> </div>) : (
+        return diagnose === "-" ? unDiagnosedBtn : (
           <div>
             <a onClick={()=>{setBoxOpen(true)}}>查看诊断报告</a>
             <FundusLightBox isOpen={boxOpen} setOpen={setBoxOpen} images={reportImg} ifPrintReport={true} 

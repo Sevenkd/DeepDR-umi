@@ -1,4 +1,5 @@
 import request from '@/utils/request';
+import baseUrl from '@/services/baseUrl';
 
 /**
  * 表格查询字段
@@ -13,7 +14,7 @@ export interface TableTodayParams {
   sorter: { [key: string]: any };
 }
 export async function queryItems(params: TableTodayParams, ) {
-  return request('/api/searchManager/tableToday', {
+  return request(baseUrl + '/api/searchManager/tableToday', {
     method: 'POST',
     data: {
       login_code: params.login_code,
