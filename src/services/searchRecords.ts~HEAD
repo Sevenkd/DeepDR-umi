@@ -1,4 +1,5 @@
 import request from '@/utils/request';
+import baseUrl from './baseUrl';
 
 /**
  * 表格查询字段
@@ -14,8 +15,7 @@ export interface TableTodayParams {
   [propName: string]: any;
 }
 export async function query_SearchRecords(params: TableTodayParams, ) {
-  console.log("query record", params);
-  return request('/api/searchManager/searchRecords', {
+  return request(baseUrl + '/api/searchManager/searchRecords', {
     method: 'POST',
     data: {
       ...params,
