@@ -54,7 +54,7 @@ export default {
 
 
   'menu.records': '病例管理',
-  'menu.records.today': '今日上传',
+  'menu.records.today': '一周上传',
   'menu.records.searchRecords': '查找病例',
   'menu.records.docDiagnose': '医生诊断',
 

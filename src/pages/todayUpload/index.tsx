@@ -3,7 +3,7 @@ import React, { useState, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { TableListItem } from './data.d';
-import { queryItems } from '@/services/todayUpload';
+import { queryWeekly } from '@/services/todayUpload';
 import { connect, history } from 'umi';
 import { ConnectState } from '@/models/connect';
 import { FundusLightBox } from '@/components/FundusImages'
@@ -20,6 +20,7 @@ const ModelDiagnoseTag: React.FC<{}> = (props:any) => {
       case "ROP轻度": color = "orange"; break;
       case "ROP重度": color = "red"; break;
       case "诊断中...": color = "blue"; break;
+      case "其他异常": color = "yellow"; break;
       default: color = "green"; break;
     }
     return( <Tag key={ele} color={color}> {ele} </Tag> );
@@ -182,7 +183,7 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
     <PageContainer>
 
       <ProTable<TableListItem>
-        headerTitle="今日上传" // 表格标题
+        headerTitle="一周上传" // 表格标题
         actionRef={actionRef} // 表格操作的索引
         formRef={formRef}     // 搜索表单的索引
         rowKey="key"          // 每一行item的key
@@ -224,7 +225,7 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
         search={false}
 
         request={(params: any, sorter: any, filter: any) => {
-          return queryItems({ ...params, sorter, filter , login_code:loginCode})
+          return queryWeekly({ ...params, sorter, filter , login_code:loginCode})
         }}
 
         columns={columns}

@@ -84,6 +84,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
 
 
   console.log("BasicLayout render");
+  console.log("logo", logo);
 
   
   return (
