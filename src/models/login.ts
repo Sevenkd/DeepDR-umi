@@ -96,10 +96,9 @@ const Model: LoginModelType = {
       const response = yield call(logOutUser, payload); // 异步向服务器发送登录请求
       if (response.res === 'success') {
         yield put({ type: 'user/deleteUserInfo', }); // 收到回复后更新登录状态
-
-        message.success("您已经退出登录");
-        history.replace({ pathname: '/user/login', });
       }
+      message.success("您已经退出登录");
+      history.replace({ pathname: '/user/login', });
     },
   },
 

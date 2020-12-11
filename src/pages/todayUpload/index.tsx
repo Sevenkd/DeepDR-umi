@@ -225,7 +225,15 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
         search={false}
 
         request={(params: any, sorter: any, filter: any) => {
-          return queryWeekly({ ...params, sorter, filter , login_code:loginCode})
+          const response = queryWeekly({ ...params, sorter, filter , login_code:loginCode});
+          response.then((response) => {
+            if (response.res === "success"){ return response; }
+            else if ( response.status ===  "UNAUTHORIZED" ) {
+                message.error("登录已过期, 请重新登录!");
+                history.replace({ pathname: '/user/login', });
+              }
+          })
+          return response;
         }}
 
         columns={columns}

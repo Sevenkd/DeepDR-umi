@@ -1,5 +1,6 @@
-import { Reducer, Effect } from 'umi';
+import { history, Reducer, Effect } from 'umi';
 import { queryRecordInfo } from '@/services/recordDiagnose';
+import { message } from 'antd';
 
 
 /**
@@ -90,11 +91,17 @@ effects: {
     const uploadID = payload.uploadID;
 
     const response = yield call(queryRecordInfo, payload); // 异步向服务器发送登录请求
+    console.log(response);
     if (response.res == 'success'){
       yield put({ type: 'saveRecordInfo', payload: {...response.recordInfo, uploadID: uploadID}, }); // 收到回复后更新登录状态
     }
     else{
       // TODO 获取病例失败, 重定向页面
+      const { status } = response;
+      if (status === "UNAUTHORIZED"){
+        message.error("登录已过期, 请重新登录!");
+        history.replace({ pathname: '/user/login', });
+      }
     }
     return response;
   },
