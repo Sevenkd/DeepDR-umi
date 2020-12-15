@@ -10,7 +10,7 @@ interface CurrentUser {
   loginCode: string | null;
   doctorName?: string;
   hospitalId?: number;
-  hospitalName?: string;
+  hospitalEName?: string;
   role?: string;
   [otherKey: string]: any;
 }

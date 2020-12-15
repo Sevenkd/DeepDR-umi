@@ -212,9 +212,7 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
         }
 
         onSubmit={
-          (params: any) => {
-            console.log("onSubmit", params);
-          }
+          (params: any) => { console.log("onSubmit", params); }
         }
 
         onReset = {

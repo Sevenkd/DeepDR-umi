@@ -34,3 +34,17 @@ export async function submitDiagnose(params: submitDiagnoseParams) {
             requestType: 'form',
           });
 }
+
+
+
+/**
+ * 向眼科专家请求远程会诊
+ */
+interface sendConsultationRequestParams { login_code: string, uploadID: number }
+export async function sendConsultationRequest(params: sendConsultationRequestParams) {
+  return  request(baseUrl + '/api/dataManager/requestConsultation', {
+            method: 'POST',
+            data: params,
+            requestType: 'form',
+          });
+}

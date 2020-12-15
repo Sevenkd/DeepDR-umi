@@ -1,4 +1,4 @@
-import { message, Space, Tag } from 'antd';
+import { Button, message, Space, Tag } from 'antd';
 import React, { useState, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -8,7 +8,8 @@ import { connect, history } from 'umi';
 import { ConnectState } from '@/models/connect';
 import { FundusLightBox } from '@/components/FundusImages'
 import { getFundusImgURL, getReportImgURL } from '@/utils/srcUrls';
-
+import { sendConsultationRequest } from '@/services/recordDiagnose';
+import { UploadCard } from './uploadComponents';
 
 /**
  * 表格中模型诊断的Tag标签
@@ -64,7 +65,7 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
   const actionRef = useRef<ActionType>();
   const formRef = useRef<any>();
 
-  const { loginCode=null, role } = props.currentUser;
+  const { loginCode=null, role="doctor", hospitalEName="MILAB" } = props.currentUser;
 
   /**
    * 表格的column配置
@@ -156,7 +157,21 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
             },
           });
         }
-        const onConsultationBtnClick = () => { message.success("会诊请求发送成功"); }
+
+        /**
+         * TODO 
+         * 远程会诊请求发送成功后不能重新点击
+         */
+        const onConsultationBtnClick = () => { 
+          sendConsultationRequest({login_code: loginCode, uploadID: row.key})
+          .then( (response) => {
+            if (response.res === "success") {
+              message.success("会诊请求发送成功"); 
+            } else {
+              message.error("请求失败, 请稍后重试!"); 
+            }
+          } )
+        }
         const unDiagnosedBtn = (
         <div> <Space>
           <a onClick={toDiagnosePage} >诊断</a> 
@@ -179,8 +194,12 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
     },
   ];
 
+  const uploadCard = hospitalEName === "WCCH" ? <UploadCard loginCode={loginCode} /> : null;
+
   return (
     <PageContainer>
+      
+      {uploadCard}
 
       <ProTable<TableListItem>
         headerTitle="一周上传" // 表格标题
@@ -240,7 +259,6 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
 
         rowSelection={{ onChange: () => {} }} 
         />
-
     </PageContainer>
   );
 };
