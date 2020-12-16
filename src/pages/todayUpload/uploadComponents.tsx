@@ -107,7 +107,7 @@ const UploadTree: React.FC<UploadTreeProps> = (props: UploadTreeProps) => {
 /**
  * 文件上传组件
  */
-interface UploadCardProps { loginCode: string }
+interface UploadCardProps { loginCode: string ,reloadTable: ()=>void }
 export const UploadCard: React.FC<UploadCardProps> = (props: UploadCardProps) => {
   const [ uploading, setUploading ] = useState<boolean>(false); //是否开始选择文件
   const [ fileList, setFileList ] = useState<File[]>([]);
@@ -134,6 +134,7 @@ export const UploadCard: React.FC<UploadCardProps> = (props: UploadCardProps) =>
         message.error("文件上传失败!");
       }
       clearFileList();
+      props.reloadTable();
     } );
   };
 

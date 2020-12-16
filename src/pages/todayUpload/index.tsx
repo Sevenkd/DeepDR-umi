@@ -8,7 +8,7 @@ import { connect, history } from 'umi';
 import { ConnectState } from '@/models/connect';
 import { FundusLightBox } from '@/components/FundusImages'
 import { getFundusImgURL, getReportImgURL } from '@/utils/srcUrls';
-import { sendConsultationRequest } from '@/services/recordDiagnose';
+import { sendConsultationRequest, rediagnoseRecordByUploadIDs } from '@/services/recordDiagnose';
 import { UploadCard } from './uploadComponents';
 
 /**
@@ -66,6 +66,8 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
   const formRef = useRef<any>();
 
   const { loginCode=null, role="doctor", hospitalEName="MILAB" } = props.currentUser;
+
+  const reloadTable = () => { actionRef.current.reloadAndRest(); } // 刷新表格
 
   /**
    * 表格的column配置
@@ -194,20 +196,21 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
     },
   ];
 
-  const uploadCard = hospitalEName === "WCCH" ? <UploadCard loginCode={loginCode} /> : null;
+  const uploadCard = hospitalEName === "WCCH" ? <UploadCard loginCode={loginCode} reloadTable={reloadTable} /> : null;
 
   return (
     <PageContainer>
       
       {uploadCard}
 
+      
       <ProTable<TableListItem>
         headerTitle="一周上传" // 表格标题
         actionRef={actionRef} // 表格操作的索引
         formRef={formRef}     // 搜索表单的索引
         rowKey="key"          // 每一行item的key
         pagination={{         // 分页设置
-            defaultPageSize:5,
+            defaultPageSize:10,
             pageSizeOptions: ["5", "10", "20", "50"]
           }}
 
@@ -257,8 +260,42 @@ const TodayUploadTable: React.FC<{}> = (props:any) => {
 
         columns={columns}
 
-        rowSelection={{ onChange: () => {} }} 
+        /**
+         * 批量操作
+         */
+        rowSelection={{}} 
+        // 左侧操作按钮
+        tableAlertRender={( { selectedRowKeys, onCleanSelected } ) => {
+          const [ rediagnose, setRediagnose ] = useState<boolean>(false);
+          const reDiagnoseRecord = () => { 
+
+            setRediagnose(true);
+            rediagnoseRecordByUploadIDs({login_code: loginCode, uploadIDs: JSON.stringify(selectedRowKeys)})
+            .then((response) => {
+              if (response.res === "success") {
+                message.success("请求成功, 请稍后片刻刷新页面获取新的诊断结果!");
+              } else {
+                message.error("请求异常, 请稍后重试!");
+              }
+              setRediagnose(false);
+              onCleanSelected();
+              reloadTable();
+            })
+           };
+
+          return (
+            <Space size={24}>
+              <span> 
+                已选 {selectedRowKeys.length} 项
+                <a style={{ marginLeft: 8 }} disabled={rediagnose} onClick={reDiagnoseRecord}> {rediagnose ? "请求诊断中..." : "请求AI重新诊断"} </a>
+              </span>
+            </Space>
+          );
+        }}
+        // 右侧操作按钮
+        // tableAlertOptionRender={}
         />
+      
     </PageContainer>
   );
 };

@@ -48,3 +48,15 @@ export async function sendConsultationRequest(params: sendConsultationRequestPar
             requestType: 'form',
           });
 }
+
+/**
+ * 请求AI模型服务器重新诊断当前病例
+ */
+interface rediagnoseRecordByUploadIDsParams { login_code: string, uploadIDs: string }
+export async function rediagnoseRecordByUploadIDs(params: rediagnoseRecordByUploadIDsParams) {
+  return  request(baseUrl + '/api/dataManager/rediagnoseRecordByUploadIDs', {
+            method: 'POST',
+            data: params,
+            requestType: 'form',
+          });
+}
