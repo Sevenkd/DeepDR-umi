@@ -14,7 +14,7 @@ const proSettings: DefaultSettings = {
   fixSiderbar: true,
   colorWeak: false,
   menu: { locale: true, },
-  title: 'Deep ROP',
+  title: '智能DR',
   pwa: false,
   iconfontUrl: '',
 };

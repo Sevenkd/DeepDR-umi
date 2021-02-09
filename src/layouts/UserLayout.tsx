@@ -43,11 +43,11 @@ const UserLayout: React.FC<UserLayoutProps> = (props) => {
             <div className={styles.header}>
               <Link to={'/user/login'}>
                 <img alt="logo" className={styles.logo} src={logo} />
-                <span className={styles.title}>Deep ROP | 登录</span>
+                <span className={styles.title}>智慧DR | 登录</span>
               </Link>
             </div>
             <div className={styles.desc}>
-              <FormattedMessage id="pages.layouts.userLayout.title" defaultMessage="Deep ROP新生儿眼底智能诊断平台" />
+              <FormattedMessage id="pages.layouts.userLayout.title" defaultMessage="智慧DR 糖尿病视网膜病变筛查平台" />
             </div>
           </div>
           

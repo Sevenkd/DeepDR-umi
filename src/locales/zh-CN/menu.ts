@@ -50,19 +50,50 @@ export default {
   'menu.editor.mind': '脑图编辑器',
   'menu.editor.koni': '拓扑编辑器',
 
-
-
-
-  'menu.records': '病例管理',
-  'menu.records.today': '一周上传',
-  'menu.records.searchRecords': '查找病例',
-  'menu.records.docDiagnose': '医生诊断',
-
-
-  'menu.patients': '病人管理',
-  'menu.patients.searchPatients': '病人查找',
-
-
   
+  // 首页
+  'menu.mainPage': '首页',
+  'menu.mainPage.searchPatient': '患者查询',
+  'menu.mainPage.followUpManagement': '随访视图',
+  'menu.mainPage.statistics': '数据统计',
+
+  // 随访管理
+  'menu.followUp': '随访管理',
+  'menu.followUp.patientView': '患者视图',
+  'menu.followUp.scheduleView': '计划视图',
+
+  // 患者管理
+  'menu.patients': '患者管理',
+  'menu.patients.patientRegister': '患者注册',
+  'menu.patients.addRecords': '新增记录',
+  'menu.patients.searchPatient': '患者查找',
+  'menu.patients.patientList': '患者管理',
+
+  // 转诊管理
+  'menu.transfer': '转诊管理',
+  'menu.transfer.outside': '转出',
+  'menu.transfer.transfering': '已接收',
+  'menu.transfer.inside': '转入',
+  'menu.transfer.history': '转诊历史',
+
+  // 数据统计
+  'menu.statistic': '数据统计',
+  'menu.statistic.information': '信息统计',
+  'menu.statistic.report': '数据报表',
+
+  // 会诊管理
+  'menu.consultation': '远程会诊',
+  'menu.consultation.consultationList': '会诊列表',
+
+  // AI诊断
+  'menu.AI': 'AI辅助诊断',
+  'menu.AI.request': '请求AI诊断',
+  'menu.AI.history': '请求历史',
+
+  // 个人中心
+  'menu.personal': '个人中心',
+  'menu.personal.changeInfo': '个人信息修改',
+  'menu.personal.helpMe': '使用指南',
+  'menu.personal.contactUs': '联系我们',
 
 };
